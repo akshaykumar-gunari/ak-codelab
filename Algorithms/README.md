@@ -49,10 +49,3 @@ Examples:
 ---
 
 ## 📜 How to Use
-
-1. Clone this repository:
-
-    ```bash
-    git clone <repo_url>
-    cd Algorithms
-    ```
