@@ -22,7 +22,6 @@ Searching algorithms locate specific elements in a dataset.
 
 Examples:
 
-
 ---
 
 ### 🌐 **3. Graph Algorithms**
@@ -31,7 +30,6 @@ Graph algorithms solve problems related to vertices and edges.
 
 Examples:
 
-
 ---
 
 ### 🧮 **4. Dynamic Programming**
@@ -39,7 +37,6 @@ Examples:
 Dynamic Programming solves problems by breaking them into overlapping subproblems.
 
 Examples:
-
 
 ---
 
