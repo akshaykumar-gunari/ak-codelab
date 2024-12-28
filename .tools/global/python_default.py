@@ -14,17 +14,6 @@ Detailed description in one to two lines.
 Execution: python file_name.py
 
 """
-
-# Metadata as module-level variables
-__author__ = "Akshaykumar Gunari"
-__copyright__ = "Copyright 2024, AK World"
-__credits__ = ["Akshaykumar Gunari"]
-__license__ = "GPL-3.0"
-__version__ = "1.0.0"
-__maintainer__ = "Akshaykumar Gunari"
-__email__ = "akshaygunari@gmail.com"
-__status__ = "Under Development"
-
 import sys
 import os
 import subprocess

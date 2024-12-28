@@ -22,6 +22,8 @@ Searching algorithms locate specific elements in a dataset.
 
 Examples:
 
+- 🌀 [Linear Search](https://github.com/akshaykumar-gunari/ak-codelab/tree/master/Algorithms/Searching/linear_search.py): Linear search is a simple searching algorithm that checks each element in an array one by one until it finds the desired value.
+
 ---
 
 ### 🌐 **3. Graph Algorithms**

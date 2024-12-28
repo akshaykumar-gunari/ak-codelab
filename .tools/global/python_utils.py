@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 # Metadata as module-level variables
 __author__ = "Akshaykumar Gunari"
 __copyright__ = "Copyright 2024, AK World"
