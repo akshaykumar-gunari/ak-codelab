@@ -5,7 +5,7 @@ File: linear_search.py
 Description: Implementation of Linear Search Algorithm
 Author: Akshaykumar Gunari
 Created: 2024-12-28
-Last Modified: 2024-12-17
+Last Modified: 2024-12-28
 Version: 1.0.0
 Python: 3.8+
 
