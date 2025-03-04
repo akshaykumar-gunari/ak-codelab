@@ -12,7 +12,7 @@ This repository is a structured and evolving collection of computer vision algor
 
 ## 🏗️ Architecture & Directory Structure
 ```
-📦 computer-vision-algorithms
+📦 Computer-Vision
 ├── 📂 image-processing       # Enhancement, filtering, transformations
 │	└── 📂 camera-calibration        # Intrinsic & extrinsic calibration, camera models
 └── README.md
@@ -49,14 +49,14 @@ This repository is a structured and evolving collection of computer vision algor
 
 ## ⚙️ Installation & Setup
 Ensure Python (>=3.8) is installed, then set up the environment:
-```bash
+<!-- ```bash
 python -m venv venv
 source venv/bin/activate
-```
-For GPU acceleration, install:
+``` -->
+<!-- For GPU acceleration, install:
 ```bash
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-```
+``` -->
 
 ## 🚀 Usage Guide
 - Notebooks (`.ipynb`) and scripts (`.py`) are organized per topic for easy reference.

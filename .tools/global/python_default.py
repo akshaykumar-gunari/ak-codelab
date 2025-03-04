@@ -4,8 +4,8 @@
 File: file_name.py
 Description: <Description>
 Author: Akshaykumar Gunari
-Created: 2024-12-17
-Last Modified: 2024-12-17
+Created: 2025-03-04
+Last Modified: 2025-03-04
 Version: 1.0.0
 Python: 3.8+
 
@@ -17,6 +17,7 @@ Execution: python file_name.py
 import sys
 import os
 import subprocess
+import python_utils
 
 def get_git_root():
     try:
@@ -28,10 +29,11 @@ def get_git_root():
 
 # Add the directory containing python_utils.py to the system path
 sys.path.insert(0, get_git_root())
-from python_utils import print_provenance
+import python_utils
 
 def main():
-    print_provenance()
+    python_utils.__status__ = "Under Development"
+    python_utils.print_provenance()
 
 if __name__ == "__main__":
     main()

@@ -3,7 +3,7 @@
 
 # Metadata as module-level variables
 __author__ = "Akshaykumar Gunari"
-__copyright__ = "Copyright 2024, AK World"
+__copyright__ = "Copyright 2025, AK World"
 __credits__ = ["Akshaykumar Gunari"]
 __license__ = "GPL-3.0"
 __version__ = "1.0.0"
