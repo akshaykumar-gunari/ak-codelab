@@ -28,7 +28,7 @@ def get_git_root():
 
 # Add the directory containing python_utils.py to the system path
 sys.path.insert(0, get_git_root())
-from python_utils import print_provenance
+from python_utils import ak_utils
 
 def linear_search(list_x, element):
     len_x = len(list_x)
@@ -40,7 +40,7 @@ def linear_search(list_x, element):
     return found
 
 def main():
-    print_provenance()
+    ak_utils.print_provenance()
     list_x = [x for x in range(20)]
     print(list_x)
     element = 6

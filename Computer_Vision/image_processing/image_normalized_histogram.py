@@ -9,8 +9,8 @@ Last Modified: 2025-03-04
 Version: 1.0.0
 Python: 3.8+
 
-This script computes the histogram and normalized histogram of a given grayscale image. 
-The normalized histogram is obtained by dividing the pixel frequency by the total number of pixels, 
+This script computes the histogram and normalized histogram of a given grayscale image.
+The normalized histogram is obtained by dividing the pixel frequency by the total number of pixels,
 resulting in values between 0 and 1.
 
 Key Features:
@@ -41,11 +41,11 @@ def get_git_root():
 
 # Add the directory containing python_utils.py to the system path
 sys.path.insert(0, get_git_root())
-import python_utils
+from python_utils import ak_utils
 
 def main():
-    python_utils.__status__ = "Completed"
-    python_utils.print_provenance()
+    ak_utils.__status__ = "Completed"
+    ak_utils.print_provenance()
     # Load a grayscale image
     image = cv2.imread('text_document.jpg', cv2.IMREAD_GRAYSCALE)
     #image = cv2.imread('lena.png', cv2.IMREAD_GRAYSCALE)
