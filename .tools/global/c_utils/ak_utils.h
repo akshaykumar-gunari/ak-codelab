@@ -18,5 +18,7 @@ void print_provenance();
 
 void clear_input_buffer();
 
+void set_program_name(const char *new_name);
+
 #endif  // METADATA_H
 
