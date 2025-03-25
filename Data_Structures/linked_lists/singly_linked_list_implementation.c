@@ -56,6 +56,16 @@ void deleteNode(struct Node** head, int key) {
     free(temp);
 }
 
+// Function to free the entire list before exiting
+void freeList(struct Node* head) {
+    struct Node* temp;
+    while (head != NULL) {
+        temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
 // Function to display the linked list
 void displayList(struct Node* head) {
     struct Node* temp = head;
@@ -115,6 +125,7 @@ int main() {
                 break;
             case 4:
                 printf("Exiting...\n");
+                freeList(head);
                 exit(0);
             default:
                 printf("Invalid choice! Try again.\n");
