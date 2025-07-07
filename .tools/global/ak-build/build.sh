@@ -2,9 +2,9 @@
 
 # Function to print usage
 print_usage() {
-    echo "Usage: $0 <command> <source_file.c>"
+    echo "Usage: $0 <command> <source_file.(c|cpp)>"
     echo "Commands:"
-    echo "  run       - Compile and run the C file"
+    echo "  run       - Compile and run the file"
     echo "  clean     - Remove the compiled binary"
     exit 1
 }
@@ -25,13 +25,34 @@ if [ -z "$GIT_ROOT" ]; then
     exit 1
 fi
 
+# Check file extension
+EXT="${SOURCE_FILE##*.}"
+
+if [ "$EXT" != "c" ] && [ "$EXT" != "cpp" ]; then
+    echo "Error: Source file must be .c or .cpp!"
+    exit 1
+fi
+
+# Pick compiler and flags based on extension
+if [ "$EXT" == "c" ]; then
+    COMPILER="gcc"
+    STD="-std=c99"
+    HEADER_EXT="h"
+    UTILS_SRC="ak_utils.c"
+elif [ "$EXT" == "cpp" ]; then
+    COMPILER="g++"
+    STD="-std=c++17"
+    HEADER_EXT="hpp"
+    UTILS_SRC="ak_utils.cpp"
+fi
+
 # Handle 'clean' command
 if [ "$COMMAND" == "clean" ]; then
     if [ -z "$SOURCE_FILE" ]; then
         echo "Error: Please provide the source file for cleanup!"
         exit 1
     fi
-    OUTPUT_FILE="${SOURCE_FILE%.c}"
+    OUTPUT_FILE="${SOURCE_FILE%.*}"
     if [ -f "$OUTPUT_FILE" ]; then
         rm "$OUTPUT_FILE" ak_utils.o
         echo "Cleaned up $OUTPUT_FILE and ak_utils.o"
@@ -52,35 +73,32 @@ if [ ! -f "$SOURCE_FILE" ]; then
     exit 1
 fi
 
-# Find ak_utils.h anywhere in the Git repo
-HEADER_PATH=$(find "$GIT_ROOT" -type f -name "ak_utils.h" | head -n 1)
+# Find ak_utils header
+HEADER_PATH=$(find "$GIT_ROOT" -type f -name "ak_utils.$HEADER_EXT" | head -n 1)
 
 if [ -z "$HEADER_PATH" ]; then
-    echo "Error: ak_utils.h not found anywhere in the repository!"
+    echo "Error: ak_utils.$HEADER_EXT not found anywhere in the repository!"
     exit 1
 fi
 
-# Extract the directory of ak_utils.h
 HEADER_DIR=$(dirname "$HEADER_PATH")
 
-# Find ak_utils.c and compile it if needed
-ak_utils_C=$(find "$GIT_ROOT" -type f -name "ak_utils.c" | head -n 1)
+# Find ak_utils source file
+UTILS_PATH=$(find "$GIT_ROOT" -type f -name "$UTILS_SRC" | head -n 1)
 
-if [ -z "$ak_utils_C" ]; then
-    echo "Error: ak_utils.c not found!"
+if [ -z "$UTILS_PATH" ]; then
+    echo "Error: $UTILS_SRC not found!"
     exit 1
 fi
 
-# Get output file name (remove .c extension)
-OUTPUT_FILE="${SOURCE_FILE%.c}"
+# Output file name
+OUTPUT_FILE="${SOURCE_FILE%.*}"
 
-# Compile ak_utils.c first
-gcc -c "$ak_utils_C" -I"$HEADER_DIR" -Wall -Wextra -std=c99 -o ak_utils.o
+# Compile ak_utils
+$COMPILER -c "$UTILS_PATH" -I"$HEADER_DIR" -Wall -Wextra "$STD" -o ak_utils.o
 
-# Compile the provided C file and link with ak_utils.o
-gcc -o "$OUTPUT_FILE" "$SOURCE_FILE" ak_utils.o -I"$HEADER_DIR" -Wall -Wextra -std=c99 || exit 1
+# Compile main
+$COMPILER -o "$OUTPUT_FILE" "$SOURCE_FILE" ak_utils.o -I"$HEADER_DIR" -Wall -Wextra "$STD" || exit 1
 
-# Run the compiled program
 echo "Compilation successful! Running $OUTPUT_FILE..."
 ./"$OUTPUT_FILE"
-
