@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AK CodeLab - DSA Challenge Tracker</title>
-    <link rel="icon" type="image/png" href="AK.jpg">
+    <link rel="icon" type="image/png" href="AK.jpg"">
     <style>
         * {
             margin: 0;
@@ -991,48 +991,6 @@
         function toggleTheme() {
             const isDark = document.body.getAttribute('data-theme') === 'dark';
             document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        }
-        function drawDailyChart() {
-          const ctx = document.getElementById('dailyChart').getContext('2d');
-          const today = new Date();
-          const year = today.getFullYear();
-          const month = today.getMonth();
-          const daysInMonth = new Date(year, month + 1, 0).getDate();
-        
-          const dayLabels = [];
-          const dayCounts = new Array(daysInMonth).fill(0);
-        
-          Object.values(problemsData).forEach(p => {
-            const d = new Date(p.date);
-            if (d.getMonth() === month && d.getFullYear() === year) {
-              const day = d.getDate() - 1; // zero index
-              dayCounts[day]++;
-            }
-          });
-        
-          for (let i = 1; i <= daysInMonth; i++) {
-            dayLabels.push(i.toString());
-          }
-        
-          new Chart(ctx, {
-            type: 'bar',
-            data: {
-              labels: dayLabels,
-              datasets: [{
-                label: 'Problems Solved',
-                data: dayCounts,
-                backgroundColor: '#667eea'
-              }]
-            },
-            options: {
-              scales: {
-                y: {
-                  beginAtZero: true,
-                  stepSize: 1
-                }
-              }
-            }
-          });
         }
 
         initializeCalendar();
