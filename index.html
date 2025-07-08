@@ -910,19 +910,16 @@
         }
 
         function updateConsistency() {
-          // ✅ Use global problemsData safely
-          const problems = Object.values(problemsData);
-          const uniqueDates = new Set(problems.map(p => p.date));
-          const totalDays = uniqueDates.size;
-        
-          // Sort dates
-          const sortedDates = Array.from(uniqueDates).sort();
-        
-          // Streaks
+          const problems = [];
+          Object.values(problemsData).forEach(arr => problems.push(...arr));
+
+          const uniqueDates = [...new Set(problems.map(p => p.date))];
+          const sortedDates = uniqueDates.sort();
+
           let longestStreak = 0;
           let currentStreak = 0;
           let prevDate = null;
-        
+
           sortedDates.forEach(dateStr => {
             const date = new Date(dateStr);
             if (prevDate) {
@@ -940,21 +937,17 @@
             }
             prevDate = date;
           });
-        
-          // This month’s consistency
+
           const today = new Date();
           const year = today.getFullYear();
           const month = today.getMonth();
           const daysInMonth = new Date(year, month + 1, 0).getDate();
-        
           const solvedThisMonth = sortedDates.filter(dateStr => {
             const dt = new Date(dateStr);
             return dt.getFullYear() === year && dt.getMonth() === month;
           }).length;
-        
           const percent = (solvedThisMonth / daysInMonth) * 100;
-        
-          // ✅ Update HTML — your same IDs
+
           document.getElementById('longestStreak').textContent = longestStreak;
           document.getElementById('monthConsistency').textContent = `${solvedThisMonth}/${daysInMonth}`;
           document.getElementById('consistencyFill').style.width = `${percent}%`;
@@ -962,33 +955,39 @@
         }
 
 
+
         function updateStats() {
-            const problems = Object.values(problemsData);
-            const total = problems.length;
-            const thisMonth = problems.filter(p => p.date.startsWith(`${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`)).length;
-            const easy = problems.filter(p => p.difficulty === 'easy').length;
-            const medium = problems.filter(p => p.difficulty === 'medium').length;
-            const hard = problems.filter(p => p.difficulty === 'hard').length;
+          const problems = [];
+          Object.values(problemsData).forEach(arr => problems.push(...arr));
 
-            document.getElementById('totalProblems').textContent = total;
-            document.getElementById('thisMonth').textContent = thisMonth;
-            document.getElementById('difficultyStats').textContent = `${easy}/${medium}/${hard}`;
+          const total = problems.length;
+          const thisMonth = problems.filter(p => 
+            p.date.startsWith(`${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`)
+          ).length;
+          const easy = problems.filter(p => p.difficulty === 'easy').length;
+          const medium = problems.filter(p => p.difficulty === 'medium').length;
+          const hard = problems.filter(p => p.difficulty === 'hard').length;
 
-            // Simple streak calculation: consecutive days
-            const dates = problems.map(p => p.date).sort();
-            let streak = 0;
-            let today = new Date(dates[dates.length - 1]);
-            for (let i = dates.length - 1; i >= 0; i--) {
-                const d = new Date(dates[i]);
-                if (today.toDateString() === d.toDateString()) {
-                    streak++;
-                    today.setDate(today.getDate() - 1);
-                } else {
-                    break;
-                }
+          document.getElementById('totalProblems').textContent = total;
+          document.getElementById('thisMonth').textContent = thisMonth;
+          document.getElementById('difficultyStats').textContent = `${easy}/${medium}/${hard}`;
+
+          // Streak calculation (per unique day)
+          const uniqueDates = [...new Set(problems.map(p => p.date))].sort();
+          let streak = 0;
+          let today = new Date(uniqueDates[uniqueDates.length - 1]);
+          for (let i = uniqueDates.length - 1; i >= 0; i--) {
+            const d = new Date(uniqueDates[i]);
+            if (today.toDateString() === d.toDateString()) {
+              streak++;
+              today.setDate(today.getDate() - 1);
+            } else {
+              break;
             }
-            document.getElementById('currentStreak').textContent = streak;
+          }
+          document.getElementById('currentStreak').textContent = streak;
         }
+
 
 
 
