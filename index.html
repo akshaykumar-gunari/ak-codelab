@@ -654,6 +654,30 @@
             <div class="search-results" id="searchResults"></div>
         </div>
 
+        <div class="main-content">
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <button class="nav-btn" onclick="previousMonth()">←</button>
+                    <div class="current-month" id="currentMonth"></div>
+                    <button class="nav-btn" onclick="nextMonth()">→</button>
+                </div>
+                <table class="calendar" id="calendar"></table>
+            </div>
+
+            <div class="problem-detail">
+                <h2>Problem Details</h2>
+                <div class="no-problem" id="noProblem">
+                    Select a date to view problem details
+                </div>
+                <div class="problem-info" id="problemInfo">
+                    <div class="problem-name" id="problemName"></div>
+                    <div class="problem-statement" id="problemStatement"></div>
+                    <div class="keywords" id="problemKeywords"></div>
+                    <a href="#" class="code-link" id="codeLink" target="_blank">View Code</a>
+                </div>
+            </div>
+        </div>
+
         <div class="stats">
             <div class="stat-card">
                 <div class="stat-number" id="totalProblems">0</div>
@@ -701,29 +725,6 @@
             </div>
         </div>
 
-        <div class="main-content">
-            <div class="calendar-section">
-                <div class="calendar-header">
-                    <button class="nav-btn" onclick="previousMonth()">←</button>
-                    <div class="current-month" id="currentMonth"></div>
-                    <button class="nav-btn" onclick="nextMonth()">→</button>
-                </div>
-                <table class="calendar" id="calendar"></table>
-            </div>
-
-            <div class="problem-detail">
-                <h2>Problem Details</h2>
-                <div class="no-problem" id="noProblem">
-                    Select a date to view problem details
-                </div>
-                <div class="problem-info" id="problemInfo">
-                    <div class="problem-name" id="problemName"></div>
-                    <div class="problem-statement" id="problemStatement"></div>
-                    <div class="keywords" id="problemKeywords"></div>
-                    <a href="#" class="code-link" id="codeLink" target="_blank">View Code</a>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
