@@ -936,24 +936,24 @@
         //   document.getElementById('consistencyFill').style.width = `${percent}%`;
         //   document.getElementById('consistencyText').textContent = `${percent.toFixed(0)}% Consistent`;
         // }
-        function updateConsistency(problemsData) {
-          // Get unique date strings
-          let uniqueDates = new Set(Object.values(problemsData).map(p => p.date));
+        function updateConsistency() {
+          // ✅ Use global problemsData safely
+          const problems = Object.values(problemsData);
+          const uniqueDates = new Set(problems.map(p => p.date));
+          const totalDays = uniqueDates.size;
         
-          let totalDays = uniqueDates.size;
+          // Sort dates
+          const sortedDates = Array.from(uniqueDates).sort();
         
-          // Sort the unique dates
-          let sortedDates = Array.from(uniqueDates).sort();
-        
-          // Calculate streaks
+          // Streaks
           let longestStreak = 0;
           let currentStreak = 0;
           let prevDate = null;
         
           sortedDates.forEach(dateStr => {
-            let date = new Date(dateStr);
+            const date = new Date(dateStr);
             if (prevDate) {
-              let diff = (date - prevDate) / (1000 * 60 * 60 * 24);
+              const diff = (date - prevDate) / (1000 * 60 * 60 * 24);
               if (diff === 1) {
                 currentStreak++;
               } else {
@@ -962,32 +962,32 @@
             } else {
               currentStreak = 1;
             }
-        
             if (currentStreak > longestStreak) {
               longestStreak = currentStreak;
             }
-        
             prevDate = date;
           });
         
-          // Calculate this month’s consistency
-          const now = new Date();
-          const month = now.getMonth();
-          const year = now.getFullYear();
+          // This month’s consistency
+          const today = new Date();
+          const year = today.getFullYear();
+          const month = today.getMonth();
           const daysInMonth = new Date(year, month + 1, 0).getDate();
-          const solvedThisMonth = Array.from(uniqueDates).filter(dateStr => {
-            const d = new Date(dateStr);
-            return d.getMonth() === month && d.getFullYear() === year;
+        
+          const solvedThisMonth = sortedDates.filter(dateStr => {
+            const dt = new Date(dateStr);
+            return dt.getFullYear() === year && dt.getMonth() === month;
           }).length;
         
-          const percent = Math.round((solvedThisMonth / daysInMonth) * 100);
+          const percent = (solvedThisMonth / daysInMonth) * 100;
         
+          // ✅ Update HTML — your same IDs
           document.getElementById('longestStreak').textContent = longestStreak;
-          document.getElementById('currentStreak').textContent = currentStreak;
           document.getElementById('monthConsistency').textContent = `${solvedThisMonth}/${daysInMonth}`;
           document.getElementById('consistencyFill').style.width = `${percent}%`;
-          document.getElementById('consistencyText').textContent = `${percent}% Consistent`;
+          document.getElementById('consistencyText').textContent = `${percent.toFixed(0)}% Consistent`;
         }
+
 
         function updateStats() {
             const problems = Object.values(problemsData);
