@@ -964,6 +964,7 @@
 
         function generateHeatmap() {
             const heatmap = document.getElementById('heatmap');
+            console.log("problemsData keys:", Object.keys(problemsData));
             heatmap.innerHTML = '';
             const days = 30;
             let today = new Date();
