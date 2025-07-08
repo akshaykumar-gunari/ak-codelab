@@ -750,6 +750,12 @@
             </div>
           </div>
         </div>
+
+        <div class="stat-item">
+          <div class="stat-number" id="difficultyStats">0/0/0</div>
+          <div class="stat-label">Easy / Medium / Hard</div>
+        </div>
+
         
     </div>
 
@@ -776,7 +782,6 @@
             updateCalendar();
             updateStats();
             updateConsistency(problemsData);
-            drawDailyChart();
         }
 
         function getWeekday(dateStr) {
@@ -797,27 +802,27 @@
             let calendarHTML = '<tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>';
             
             let date = 1;
-            for (let i = 0; i < 6; i++) {
-                calendarHTML += '<tr>';
-                for (let j = 0; j < 7; j++) {
-                    if (i === 0 && j < firstDay) {
-                        calendarHTML += '<td class="other-month"></td>';
-                    } else if (date > daysInMonth) {
-                        calendarHTML += '<td class="other-month"></td>';
-                    } else {
-                        const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-                        const hasProblem = problemsData[dateString] ? 'has-problem' : '';
-                        const isSelected = selectedDate === dateString ? 'selected' : '';
-                        
-                        calendarHTML += `<td class="${hasProblem} ${isSelected}" onclick="selectDate('${dateString}')">
-                            ${date}
-                            ${problemsData[dateString] ? '<div class="problem-indicator"></div>' : ''}
-                        </td>`;
-                        date++;
-                    }
-                }
-                calendarHTML += '</tr>';
+            for (let j = 0; j < 7; j++) {
+              if (i === 0 && j < firstDay) {
+                calendarHTML += '<td class="other-month"></td>';
+              } else if (date > daysInMonth) {
+                calendarHTML += '<td class="other-month"></td>';
+              } else {
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+                
+                const hasProblem = problemsData[dateString];
+                const matchesFilter = currentFilter === 'all' || (hasProblem && hasProblem.difficulty === currentFilter);
+                const cellClass = hasProblem && matchesFilter ? 'has-problem' : '';
+                const isSelected = selectedDate === dateString ? 'selected' : '';
+            
+                calendarHTML += `<td class="${cellClass} ${isSelected}" onclick="selectDate('${dateString}')">
+                  ${date}
+                  ${hasProblem && matchesFilter ? '<div class="problem-indicator"></div>' : ''}
+                </td>`;
+                date++;
+              }
             }
+
             
             document.getElementById('calendar').innerHTML = calendarHTML;
         }
@@ -886,8 +891,9 @@
                 const item = document.createElement('div');
                 item.className = 'search-result-item';
                 item.onclick = () => selectDate(problem.date);
+                const day = problem.day || getWeekday(problem.date);
                 item.innerHTML = `
-                    <div class="result-date">${problem.date} (${problem.day})</div>
+                    <div class="result-date">${problem.date} (${day})</div>
                     <div class="result-title">${problem.problemName}</div>
                     <div class="result-keywords">
                         ${problem.keywords.map(k => `<span class="result-keyword">${k}</span>`).join('')}
@@ -1004,8 +1010,6 @@
             const isDark = document.body.getAttribute('data-theme') === 'dark';
             document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
         }
-
-        initializeCalendar();
     </script>
 </body>
 </html>
