@@ -671,17 +671,13 @@
             </div>
 
             <div class="problem-detail">
-                <h2>Problem Details</h2>
-                <div class="no-problem" id="noProblem">
-                    Select a date to view problem details
-                </div>
-                <div class="problem-info" id="problemInfo">
-                    <div class="problem-name" id="problemName"></div>
-                    <div class="problem-statement" id="problemStatement"></div>
-                    <div class="keywords" id="problemKeywords"></div>
-                    <a href="#" class="code-link" id="codeLink" target="_blank">View Code</a>
-                </div>
+              <h2>Problem Details</h2>
+              <div class="no-problem" id="noProblem">
+                Select a date to view problem details
+              </div>
+              <div id="problemInfo"></div>
             </div>
+
         </div>
 
         <div class="stats">
@@ -822,12 +818,15 @@
           updateCalendar();
         
           const problems = problemsData[dateString];
-          const info = document.getElementById('problemInfo');
           const noProblem = document.getElementById('noProblem');
+          const problemInfo = document.getElementById('problemInfo');
         
           if (problems && problems.length > 0) {
             noProblem.style.display = 'none';
-            info.innerHTML = ''; // clear previous
+            problemInfo.style.display = 'block';
+        
+            // Clear old content
+            problemInfo.innerHTML = '';
         
             problems.forEach(problem => {
               const block = document.createElement('div');
@@ -841,13 +840,15 @@
                 </div>
                 <a href="${problem.codeLink}" class="code-link" target="_blank">View Code</a>
               `;
-              info.appendChild(block);
+              problemInfo.appendChild(block);
             });
+        
           } else {
-            info.innerHTML = '';
+            problemInfo.innerHTML = '';
             noProblem.style.display = 'block';
           }
         }
+
 
 
         function previousMonth() {
