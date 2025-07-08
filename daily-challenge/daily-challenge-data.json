@@ -9,8 +9,8 @@
     "difficulty": "easy"
   },
   {
-    "date": "2025-07-09",
-    "day": "Wednesday",
+    "date": "2025-07-08",
+    "day": "Tuesday",
     "problemName": "Two Sum",
     "problemStatement": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
     "codeLink": "https://github.com/username/dsa-solutions/blob/main/two-sum.py",
