@@ -750,12 +750,6 @@
             </div>
           </div>
         </div>
-
-        <div class="stat-item">
-          <div class="stat-number" id="difficultyStats">0/0/0</div>
-          <div class="stat-label">Easy / Medium / Hard</div>
-        </div>
-
         
     </div>
 
@@ -782,6 +776,7 @@
             updateCalendar();
             updateStats();
             updateConsistency(problemsData);
+            drawDailyChart();
         }
 
         function getWeekday(dateStr) {
@@ -802,27 +797,27 @@
             let calendarHTML = '<tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>';
             
             let date = 1;
-            for (let j = 0; j < 7; j++) {
-              if (i === 0 && j < firstDay) {
-                calendarHTML += '<td class="other-month"></td>';
-              } else if (date > daysInMonth) {
-                calendarHTML += '<td class="other-month"></td>';
-              } else {
-                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-                
-                const hasProblem = problemsData[dateString];
-                const matchesFilter = currentFilter === 'all' || (hasProblem && hasProblem.difficulty === currentFilter);
-                const cellClass = hasProblem && matchesFilter ? 'has-problem' : '';
-                const isSelected = selectedDate === dateString ? 'selected' : '';
-            
-                calendarHTML += `<td class="${cellClass} ${isSelected}" onclick="selectDate('${dateString}')">
-                  ${date}
-                  ${hasProblem && matchesFilter ? '<div class="problem-indicator"></div>' : ''}
-                </td>`;
-                date++;
-              }
+            for (let i = 0; i < 6; i++) {
+                calendarHTML += '<tr>';
+                for (let j = 0; j < 7; j++) {
+                    if (i === 0 && j < firstDay) {
+                        calendarHTML += '<td class="other-month"></td>';
+                    } else if (date > daysInMonth) {
+                        calendarHTML += '<td class="other-month"></td>';
+                    } else {
+                        const dateString = ${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')};
+                        const hasProblem = problemsData[dateString] ? 'has-problem' : '';
+                        const isSelected = selectedDate === dateString ? 'selected' : '';
+                        
+                        calendarHTML += <td class="${hasProblem} ${isSelected}" onclick="selectDate('${dateString}')">
+                            ${date}
+                            ${problemsData[dateString] ? '<div class="problem-indicator"></div>' : ''}
+                        </td>;
+                        date++;
+                    }
+                }
+                calendarHTML += '</tr>';
             }
-
             
             document.getElementById('calendar').innerHTML = calendarHTML;
         }
@@ -841,9 +836,9 @@
                 document.getElementById('codeLink').href = problem.codeLink;
                 
                 // Create keywords with difficulty tag
-                let keywordsHTML = `<span class="difficulty-tag difficulty-${problem.difficulty}">${problem.difficulty.toUpperCase()}</span>`;
+                let keywordsHTML = <span class="difficulty-tag difficulty-${problem.difficulty}">${problem.difficulty.toUpperCase()}</span>;
                 keywordsHTML += problem.keywords.map(keyword => 
-                    `<span class="keyword-tag">${keyword}</span>`
+                    <span class="keyword-tag">${keyword}</span>
                 ).join('');
                 document.getElementById('problemKeywords').innerHTML = keywordsHTML;
             } else {
@@ -891,14 +886,13 @@
                 const item = document.createElement('div');
                 item.className = 'search-result-item';
                 item.onclick = () => selectDate(problem.date);
-                const day = problem.day || getWeekday(problem.date);
-                item.innerHTML = `
-                    <div class="result-date">${problem.date} (${day})</div>
+                item.innerHTML = 
+                    <div class="result-date">${problem.date} (${problem.day})</div>
                     <div class="result-title">${problem.problemName}</div>
                     <div class="result-keywords">
-                        ${problem.keywords.map(k => `<span class="result-keyword">${k}</span>`).join('')}
+                        ${problem.keywords.map(k => <span class="result-keyword">${k}</span>).join('')}
                     </div>
-                `;
+                ;
                 container.appendChild(item);
             });
             container.style.display = 'block';
@@ -907,7 +901,7 @@
         function filterByDifficulty(level) {
             currentFilter = level;
             document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.difficulty-btn[onclick="filterByDifficulty('${level}')"]`).classList.add('active');
+            document.querySelector(.difficulty-btn[onclick="filterByDifficulty('${level}')"]).classList.add('active');
             updateCalendar();
         }
 
@@ -958,23 +952,23 @@
         
           // ✅ Update HTML — your same IDs
           document.getElementById('longestStreak').textContent = longestStreak;
-          document.getElementById('monthConsistency').textContent = `${solvedThisMonth}/${daysInMonth}`;
-          document.getElementById('consistencyFill').style.width = `${percent}%`;
-          document.getElementById('consistencyText').textContent = `${percent.toFixed(0)}% Consistent`;
+          document.getElementById('monthConsistency').textContent = ${solvedThisMonth}/${daysInMonth};
+          document.getElementById('consistencyFill').style.width = ${percent}%;
+          document.getElementById('consistencyText').textContent = ${percent.toFixed(0)}% Consistent;
         }
 
 
         function updateStats() {
             const problems = Object.values(problemsData);
             const total = problems.length;
-            const thisMonth = problems.filter(p => p.date.startsWith(`${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`)).length;
+            const thisMonth = problems.filter(p => p.date.startsWith(${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')})).length;
             const easy = problems.filter(p => p.difficulty === 'easy').length;
             const medium = problems.filter(p => p.difficulty === 'medium').length;
             const hard = problems.filter(p => p.difficulty === 'hard').length;
 
             document.getElementById('totalProblems').textContent = total;
             document.getElementById('thisMonth').textContent = thisMonth;
-            document.getElementById('difficultyStats').textContent = `${easy}/${medium}/${hard}`;
+            document.getElementById('difficultyStats').textContent = ${easy}/${medium}/${hard};
 
             // Simple streak calculation: consecutive days
             const dates = problems.map(p => p.date).sort();
@@ -998,8 +992,8 @@
             const solved = Object.keys(problemsData).length;
             const target = 100; // example target
             const percent = Math.min((solved / target) * 100, 100);
-            document.getElementById('progressFill').style.width = `${percent}%`;
-            document.getElementById('progressText').textContent = `${Math.round(percent)}% Complete`;
+            document.getElementById('progressFill').style.width = ${percent}%;
+            document.getElementById('progressText').textContent = ${Math.round(percent)}% Complete;
         }
 
         function updateAchievements() {
@@ -1010,6 +1004,8 @@
             const isDark = document.body.getAttribute('data-theme') === 'dark';
             document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
         }
+
+        initializeCalendar();
     </script>
 </body>
 </html>
