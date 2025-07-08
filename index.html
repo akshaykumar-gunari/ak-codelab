@@ -700,21 +700,18 @@
 
         <div class="advanced-features">
             <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <div class="feature-title">Progress Tracking</div>
-                <div class="feature-description">Visual progress bars and completion percentages</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-                </div>
-                <div id="progressText">0% Complete</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🏆</div>
-                <div class="feature-title">Achievements</div>
-                <div class="feature-description">Unlock badges for coding milestones</div>
-                <div id="achievementBadges">
-                    <span class="keyword-tag">🥇 First Problem</span>
-                    <span class="keyword-tag">🔥 5 Day Streak</span>
+                <div class="feature-icon">📅</div>
+                    <div class="feature-title">Consistency Metrics</div>
+                    <div class="feature-description">
+                      Track how consistent you are with your daily problem-solving habit.
+                    </div>
+                <div style="margin-top: 15px; text-align: left;">
+                    <div><strong>🔥 Longest Streak:</strong> <span id="longestStreak">0</span> days</div>
+                        <div><strong>📅 This Month:</strong> <span id="monthConsistency">0/30</span> days</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="consistencyFill" style="width: 0%"></div>
+                    </div>
+            <div id="consistencyText">0% Consistent</div>
                 </div>
             </div>
             <div class="feature-card">
@@ -750,8 +747,7 @@
             updateCalendar();
             updateStats();
             generateHeatmap();
-            updateProgressBar();
-            updateAchievements();
+            updateConsistency();
         }
 
         function updateCalendar() {
@@ -874,6 +870,67 @@
             document.querySelector(`.difficulty-btn[onclick="filterByDifficulty('${level}')"]`).classList.add('active');
             updateCalendar();
         }
+
+        function updateConsistency() {
+          let dates = Object.keys(problemsData);
+          let uniqueDates = new Set(dates);
+        
+          let streak = 0, longest = 0, currentStreak = 0;
+          let today = new Date();
+          let datePointer = new Date(today);
+        
+          while (true) {
+            let y = datePointer.getFullYear();
+            let m = String(datePointer.getMonth() + 1).padStart(2, '0');
+            let d = String(datePointer.getDate()).padStart(2, '0');
+            let dateStr = `${y}-${m}-${d}`;
+            if (uniqueDates.has(dateStr)) {
+              currentStreak++;
+              datePointer.setDate(datePointer.getDate() - 1);
+            } else {
+              break;
+            }
+          }
+        
+          // Calculate longest streak
+          let sorted = Array.from(uniqueDates).sort();
+          let prev = null;
+          let tempStreak = 0;
+        
+          sorted.forEach(date => {
+            let thisDate = new Date(date);
+            if (prev) {
+              let diff = (thisDate - prev) / (1000 * 60 * 60 * 24);
+              if (diff === 1) {
+                tempStreak++;
+              } else {
+                tempStreak = 1;
+              }
+            } else {
+              tempStreak = 1;
+            }
+            if (tempStreak > longest) longest = tempStreak;
+            prev = thisDate;
+          });
+        
+          // Calculate this month’s consistency
+          let year = today.getFullYear();
+          let month = today.getMonth();
+          let daysInMonth = new Date(year, month + 1, 0).getDate();
+          let solvedThisMonth = sorted.filter(d => {
+            let dt = new Date(d);
+            return dt.getFullYear() === year && dt.getMonth() === month;
+          }).length;
+        
+          let percent = (solvedThisMonth / daysInMonth) * 100;
+        
+          // Update HTML
+          document.getElementById('longestStreak').textContent = longest;
+          document.getElementById('monthConsistency').textContent = `${solvedThisMonth}/${daysInMonth}`;
+          document.getElementById('consistencyFill').style.width = `${percent}%`;
+          document.getElementById('consistencyText').textContent = `${percent.toFixed(0)}% Consistent`;
+        }
+
 
         function updateStats() {
             const problems = Object.values(problemsData);
