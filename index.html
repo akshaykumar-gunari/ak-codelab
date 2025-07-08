@@ -123,6 +123,7 @@
             opacity: 0.9;
             max-width: 800px;
             margin: 0 auto;
+            text-align: justify;
         }
 
         .search-section {
@@ -624,11 +625,15 @@
         <div class="intro-section">
             <h2>🌟 Elevate Your Problem-Solving Skills!</h2>
             <p>
-                Welcome to <strong>AK CodeLab</strong> — your personal hub for conquering Data Structures and Algorithms, one challenge at a time. 
-                Build unstoppable momentum with daily practice, strengthen your logical thinking, and master concepts through consistency. 
-                Every solved problem is a milestone on your journey to becoming a confident, efficient problem solver. 
-                Stay on track, celebrate your streaks, and watch your skills grow with every line of code you write. 
-                Let’s make DSA a daily habit — your future self will thank you!
+                Welcome to <strong>AK CodeLab</strong> — my personal tracker for solving Data Structures and Algorithms problems every single day.
+                This space helps me organize what I’ve solved, when I solved it, and how consistently I stick to my daily practice routine.
+
+                By recording each problem with its details, difficulty level, and keywords, I can easily revisit concepts, identify patterns in my learning, 
+                and spot areas that need more focus. The streaks and progress charts show how well I’m sticking to my commitment.
+
+                This isn’t about competing with anyone — it’s about building a reliable habit, tracking my effort honestly, and making steady improvements over time.
+
+                I use this tracker to stay accountable, measure my consistency, and maintain momentum in mastering DSA step by step.
             </p>
         </div>
 
@@ -876,66 +881,6 @@
             updateCalendar();
         }
 
-        // function updateConsistency() {
-        //   let dates = Object.keys(problemsData);
-        //   //let uniqueDates = new Set(dates);
-        //   let uniqueDates = new Set(problemsData.map(p => p.date));
-        
-        //   let streak = 0, longest = 0, currentStreak = 0;
-        //   let today = new Date();
-        //   let datePointer = new Date(today);
-        
-        //   while (true) {
-        //     let y = datePointer.getFullYear();
-        //     let m = String(datePointer.getMonth() + 1).padStart(2, '0');
-        //     let d = String(datePointer.getDate()).padStart(2, '0');
-        //     let dateStr = `${y}-${m}-${d}`;
-        //     if (uniqueDates.has(dateStr)) {
-        //       currentStreak++;
-        //       datePointer.setDate(datePointer.getDate() - 1);
-        //     } else {
-        //       break;
-        //     }
-        //   }
-        
-        //   // Calculate longest streak
-        //   let sorted = Array.from(uniqueDates).sort();
-        //   let prev = null;
-        //   let tempStreak = 0;
-        
-        //   sorted.forEach(date => {
-        //     let thisDate = new Date(date);
-        //     if (prev) {
-        //       let diff = (thisDate - prev) / (1000 * 60 * 60 * 24);
-        //       if (diff === 1) {
-        //         tempStreak++;
-        //       } else {
-        //         tempStreak = 1;
-        //       }
-        //     } else {
-        //       tempStreak = 1;
-        //     }
-        //     if (tempStreak > longest) longest = tempStreak;
-        //     prev = thisDate;
-        //   });
-        
-        //   // Calculate this month’s consistency
-        //   let year = today.getFullYear();
-        //   let month = today.getMonth();
-        //   let daysInMonth = new Date(year, month + 1, 0).getDate();
-        //   let solvedThisMonth = sorted.filter(d => {
-        //     let dt = new Date(d);
-        //     return dt.getFullYear() === year && dt.getMonth() === month;
-        //   }).length;
-        
-        //   let percent = (solvedThisMonth / daysInMonth) * 100;
-        
-        //   // Update HTML
-        //   document.getElementById('longestStreak').textContent = longest;
-        //   document.getElementById('monthConsistency').textContent = `${solvedThisMonth}/${daysInMonth}`;
-        //   document.getElementById('consistencyFill').style.width = `${percent}%`;
-        //   document.getElementById('consistencyText').textContent = `${percent.toFixed(0)}% Consistent`;
-        // }
         function updateConsistency() {
           // ✅ Use global problemsData safely
           const problems = Object.values(problemsData);
