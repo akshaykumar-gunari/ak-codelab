@@ -284,6 +284,40 @@
             opacity: 0.8;
         }
 
+
+        .combined-stats-card {
+          background: var(--card-bg);
+          padding: 30px;
+          border-radius: 15px;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          box-shadow: var(--shadow);
+          margin-bottom: 30px;
+          flex-wrap: wrap;
+        }
+        
+        .stat-item {
+          text-align: center;
+          margin: 10px 20px;
+        }
+        
+        .stat-item .stat-number {
+          font-size: 2em;
+          font-weight: bold;
+          color: var(--primary-color);
+        }
+        
+        .stat-item .streak-icon {
+          font-size: 2em;
+        }
+        
+        .stat-item .stat-label {
+          color: var(--text-color);
+          margin-top: 5px;
+          opacity: 0.8;
+        }
+
         .streak-card {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             color: white;
@@ -683,57 +717,30 @@
             </div>
         </div>
 
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-number" id="totalProblems">0</div>
-                <div class="stat-label">Total Problems Solved</div>
+        <div class="combined-stats-card">
+          <div class="stat-group">
+            <div class="stat-item">
+              <div class="stat-number" id="totalProblems">0</div>
+              <div class="stat-label">Total Problems Solved</div>
             </div>
-            <div class="stat-card streak-card">
-                <div class="streak-icon">🔥</div>
-                <div class="stat-number" id="currentStreak">0</div>
-                <div class="stat-label">Day Streak</div>
+            <div class="stat-item">
+              <div class="streak-icon">🔥</div>
+              <div class="stat-number" id="currentStreak">0</div>
+              <div class="stat-label">Day Streak</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="thisMonth">0</div>
-                <div class="stat-label">This Month</div>
+            <div class="stat-item">
+              <div class="stat-number" id="thisMonth">0</div>
+              <div class="stat-label">This Month</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="difficultyStats">0/0/0</div>
-                <div class="stat-label">Easy/Medium/Hard</div>
-            </div>
-        </div>
-
-        <!-- <div class="advanced-features">
-            <div class="feature-card">
-                <div class="feature-icon">📅</div>
-                    <div class="feature-title">Consistency Metrics</div>
-                        <div class="feature-description">
-                          Track how consistent you are with your daily problem-solving habit.
-                        </div>
-                    <div style="margin-top: 15px; text-align: left;">
-                    <div><strong>🔥 Longest Streak:</strong> <span id="longestStreak">0</span> days</div>
-                        <div><strong>📅 This Month:</strong> <span id="monthConsistency">0/30</span> days</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="consistencyFill" style="width: 0%"></div>
-                    </div>
-                    <div id="consistencyText">0% Consistent</div>
-                </div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📈</div>
-                <div class="feature-title">Activity Heatmap</div>
-                <div class="feature-description">GitHub-style activity visualization</div>
-                <div class="heatmap" id="heatmap"></div>
-            </div>
-        </div> -->
-        <div class="advanced-features">
-          <div class="feature-card">
+          </div>
+        
+          <div class="consistency-metrics">
             <div class="feature-icon">📅</div>
             <div class="feature-title">Consistency Metrics</div>
             <div class="feature-description">
               Track how consistent you are with your daily problem-solving habit.
             </div>
-            <div style="margin-top: 15px; text-align: left;">
+            <div class="consistency-details">
               <div><strong>🔥 Longest Streak:</strong> <span id="longestStreak">0</span> days</div>
               <div><strong>📅 This Month:</strong> <span id="monthConsistency">0/30</span> days</div>
               <div class="progress-bar">
@@ -742,17 +749,8 @@
               <div id="consistencyText">0% Consistent</div>
             </div>
           </div>
-        
-          <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <div class="feature-title">Daily Solves Bar Chart</div>
-            <div class="feature-description">
-              Visualize how many problems you solved each day this month.
-            </div>
-            <canvas id="dailyChart" width="400" height="200"></canvas>
-          </div>
         </div>
-
+        
     </div>
 
     <script>
@@ -1005,48 +1003,6 @@
         function toggleTheme() {
             const isDark = document.body.getAttribute('data-theme') === 'dark';
             document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        }
-        function drawDailyChart() {
-          const ctx = document.getElementById('dailyChart').getContext('2d');
-          const today = new Date();
-          const year = today.getFullYear();
-          const month = today.getMonth();
-          const daysInMonth = new Date(year, month + 1, 0).getDate();
-        
-          const dayLabels = [];
-          const dayCounts = new Array(daysInMonth).fill(0);
-        
-          Object.values(problemsData).forEach(p => {
-            const d = new Date(p.date);
-            if (d.getMonth() === month && d.getFullYear() === year) {
-              const day = d.getDate() - 1; // zero index
-              dayCounts[day]++;
-            }
-          });
-        
-          for (let i = 1; i <= daysInMonth; i++) {
-            dayLabels.push(i.toString());
-          }
-        
-          new Chart(ctx, {
-            type: 'bar',
-            data: {
-              labels: dayLabels,
-              datasets: [{
-                label: 'Problems Solved',
-                data: dayCounts,
-                backgroundColor: '#667eea'
-              }]
-            },
-            options: {
-              scales: {
-                y: {
-                  beginAtZero: true,
-                  stepSize: 1
-                }
-              }
-            }
-          });
         }
 
         initializeCalendar();
