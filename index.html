@@ -752,7 +752,6 @@
             updateCalendar();
             updateStats();
             updateConsistency(problemsData);
-            generateHeatmap();
         }
 
         function getWeekday(dateStr) {
@@ -962,33 +961,6 @@
             document.getElementById('currentStreak').textContent = streak;
         }
 
-        function generateHeatmap() {
-          const heatmap = document.getElementById('heatmap');
-          heatmap.innerHTML = '';
-        
-          const today = new Date();
-          const days = 84; // 12 weeks * 7 days
-        
-          // Count problems per day
-          const counts = {};
-          Object.values(problemsData).forEach(p => {
-            counts[p.date] = (counts[p.date] || 0) + 1;
-          });
-        
-          for (let i = 0; i < days; i++) {
-            const d = new Date(today);
-            d.setDate(today.getDate() - (days - i - 1));
-            const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-            const count = counts[dateStr] || 0;
-        
-            const cell = document.createElement('div');
-            cell.className = 'heatmap-cell';
-            cell.setAttribute('data-count', Math.min(count, 4));
-            cell.title = `${dateStr}: ${count} solved`; // Optional tooltip
-        
-            heatmap.appendChild(cell);
-          }
-        }
 
 
         function updateProgressBar() {
