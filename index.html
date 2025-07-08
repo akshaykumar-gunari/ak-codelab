@@ -755,7 +755,10 @@
             // Convert array to an object for fast lookup by date
             problemsData = {};
             data.forEach(problem => {
-              problemsData[problem.date] = problem;
+            if (!problemsData[problem.date]) {
+              problemsData[problem.date] = [];
+            }
+            problemsData[problem.date].push(problem);
             });
             initializeCalendar();
           })
@@ -815,29 +818,37 @@
         }
 
         function selectDate(dateString) {
-            selectedDate = dateString;
-            updateCalendar();
-            
-            const problem = problemsData[dateString];
-            if (problem) {
-                document.getElementById('noProblem').style.display = 'none';
-                document.getElementById('problemInfo').classList.add('active');
-                
-                document.getElementById('problemName').textContent = problem.problemName;
-                document.getElementById('problemStatement').textContent = problem.problemStatement;
-                document.getElementById('codeLink').href = problem.codeLink;
-                
-                // Create keywords with difficulty tag
-                let keywordsHTML = `<span class="difficulty-tag difficulty-${problem.difficulty}">${problem.difficulty.toUpperCase()}</span>`;
-                keywordsHTML += problem.keywords.map(keyword => 
-                    `<span class="keyword-tag">${keyword}</span>`
-                ).join('');
-                document.getElementById('problemKeywords').innerHTML = keywordsHTML;
-            } else {
-                document.getElementById('noProblem').style.display = 'block';
-                document.getElementById('problemInfo').classList.remove('active');
-                            }
+          selectedDate = dateString;
+          updateCalendar();
+        
+          const problems = problemsData[dateString];
+          const info = document.getElementById('problemInfo');
+          const noProblem = document.getElementById('noProblem');
+        
+          if (problems && problems.length > 0) {
+            noProblem.style.display = 'none';
+            info.innerHTML = ''; // clear previous
+        
+            problems.forEach(problem => {
+              const block = document.createElement('div');
+              block.className = 'problem-info active';
+              block.innerHTML = `
+                <div class="problem-name">${problem.problemName}</div>
+                <div class="problem-statement">${problem.problemStatement}</div>
+                <div class="keywords">
+                  <span class="difficulty-tag difficulty-${problem.difficulty}">${problem.difficulty.toUpperCase()}</span>
+                  ${problem.keywords.map(k => `<span class="keyword-tag">${k}</span>`).join('')}
+                </div>
+                <a href="${problem.codeLink}" class="code-link" target="_blank">View Code</a>
+              `;
+              info.appendChild(block);
+            });
+          } else {
+            info.innerHTML = '';
+            noProblem.style.display = 'block';
+          }
         }
+
 
         function previousMonth() {
             currentDate.setMonth(currentDate.getMonth() - 1);
