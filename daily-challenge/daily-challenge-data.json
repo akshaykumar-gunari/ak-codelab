@@ -1,0 +1,21 @@
+[
+  {
+    "date": "2025-01-15",
+    "day": "Wednesday",
+    "problemName": "Two Sum",
+    "problemStatement": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    "codeLink": "https://github.com/username/dsa-solutions/blob/main/two-sum.py",
+    "keywords": ["hash-map", "arrays"],
+    "difficulty": "easy"
+  },
+  {
+    "date": "2025-01-16",
+    "day": "Thursday",
+    "problemName": "Binary Tree Inorder Traversal",
+    "problemStatement": "Given the root of a binary tree, return the inorder traversal of its nodes' values.",
+    "codeLink": "https://github.com/username/dsa-solutions/blob/main/inorder-traversal.py",
+    "keywords": ["binary-tree", "recursion", "dfs"],
+    "difficulty": "medium"
+  }
+  // More problems...
+]

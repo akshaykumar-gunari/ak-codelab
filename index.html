@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AK CodeLab - DSA Challenge Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --input-bg: #ffffff;
+            --calendar-hover: #f0f2ff;
+            --problem-bg: #f8f9fa;
+            --search-result-bg: #f8f9fa;
+            --search-result-hover: #e8f0fe;
+            --success-color: #4caf50;
+            --easy-color: #4caf50;
+            --medium-color: #ff9800;
+            --hard-color: #f44336;
+        }
+
+        [data-theme="dark"] {
+            --primary-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --bg-color: #1a1a2e;
+            --text-color: #e0e0e0;
+            --card-bg: #2d2d44;
+            --border-color: #404057;
+            --shadow: 0 10px 30px rgba(0,0,0,0.3);
+            --input-bg: #2d2d44;
+            --calendar-hover: #404057;
+            --problem-bg: #404057;
+            --search-result-bg: #404057;
+            --search-result-hover: #4a4a67;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .intro-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .intro-section h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .intro-section p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .search-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .search-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .search-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-group label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .search-input {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .search-results {
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--search-result-bg);
+            margin-top: 10px;
+        }
+
+        .search-result-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .search-result-item:hover {
+            background: var(--search-result-hover);
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-date {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .result-title {
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .result-keywords {
+            font-size: 0.8em;
+        }
+
+        .result-keyword {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-right: 5px;
+        }
+
+        .difficulty-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .difficulty-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .difficulty-btn:hover, .difficulty-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            color: var(--text-color);
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        .streak-card {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+        }
+
+        .streak-card .stat-number {
+            color: white;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .streak-card .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .streak-card::before {
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+        }
+
+        .streak-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .calendar-section, .problem-detail {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .current-month {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .calendar {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .calendar th, .calendar td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .calendar th {
+            background: var(--problem-bg);
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .calendar td {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            color: var(--text-color);
+        }
+
+        .calendar td:hover {
+            background: var(--calendar-hover);
+        }
+
+        .calendar .has-problem {
+            background: #e8f5e8;
+            color: #2d7d32;
+            font-weight: bold;
+        }
+
+        .calendar .has-problem:hover {
+            background: #c8e6c9;
+        }
+
+        .calendar .selected {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .calendar .other-month {
+            color: #ccc;
+        }
+
+        .problem-indicator {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+        }
+
+        .problem-detail h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .problem-info {
+            display: none;
+        }
+
+        .problem-info.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .problem-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .problem-statement {
+            background: var(--problem-bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .keywords {
+            margin-bottom: 15px;
+        }
+
+        .keyword-tag {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin-right: 8px;
+            margin-bottom: 5px;
+        }
+
+        .difficulty-tag {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin-right: 8px;
+            margin-bottom: 5px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .difficulty-easy {
+            background: var(--easy-color);
+        }
+
+        .difficulty-medium {
+            background: var(--medium-color);
+        }
+
+        .difficulty-hard {
+            background: var(--hard-color);
+        }
+
+        .code-link {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .code-link:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .no-problem {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+            background: var(--problem-bg);
+            border-radius: 8px;
+        }
+
+        .advanced-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
+        }
+
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(12px, 1fr));
+            gap: 2px;
+            margin-top: 15px;
+            max-width: 100%;
+        }
+
+        .heatmap-cell {
+            width: 12px;
+            height: 12px;
+            background: var(--border-color);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .heatmap-cell.active {
+            background: var(--primary-color);
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .intro-section {
+                padding: 20px;
+            }
+            
+            .theme-toggle {
+                position: static;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            <h1>AK CodeLab</h1>
+            <p class="subtitle">Daily DSA Challenge Tracker</p>
+        </header>
+
+        <div class="intro-section">
+            <h2>🌟 Elevate Your Problem-Solving Skills!</h2>
+            <p>
+                Welcome to <strong>AK CodeLab</strong> — your personal hub for conquering Data Structures and Algorithms, one challenge at a time. 
+                Build unstoppable momentum with daily practice, strengthen your logical thinking, and master concepts through consistency. 
+                Every solved problem is a milestone on your journey to becoming a confident, efficient problem solver. 
+                Stay on track, celebrate your streaks, and watch your skills grow with every line of code you write. 
+                Let’s make DSA a daily habit — your future self will thank you!
+            </p>
+        </div>
+
+
+        <div class="search-section">
+            <div class="search-container">
+                <div class="search-group">
+                    <label for="dateSearch">Search by Date</label>
+                    <input type="date" id="dateSearch" class="search-input" onchange="searchByDate()">
+                </div>
+                <div class="search-group">
+                    <label for="keywordSearch">Search by Keywords</label>
+                    <input type="text" id="keywordSearch" class="search-input" placeholder="e.g., recursion, graphs, sorting..." oninput="searchByKeyword()">
+                </div>
+            </div>
+            <div class="difficulty-filter">
+                <span style="color: var(--primary-color); font-weight: bold;">Filter by Difficulty:</span>
+                <button class="difficulty-btn active" onclick="filterByDifficulty('all')">All</button>
+                <button class="difficulty-btn" onclick="filterByDifficulty('easy')">Easy</button>
+                <button class="difficulty-btn" onclick="filterByDifficulty('medium')">Medium</button>
+                <button class="difficulty-btn" onclick="filterByDifficulty('hard')">Hard</button>
+            </div>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalProblems">0</div>
+                <div class="stat-label">Total Problems Solved</div>
+            </div>
+            <div class="stat-card streak-card">
+                <div class="streak-icon">🔥</div>
+                <div class="stat-number" id="currentStreak">0</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="thisMonth">0</div>
+                <div class="stat-label">This Month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="difficultyStats">0/0/0</div>
+                <div class="stat-label">Easy/Medium/Hard</div>
+            </div>
+        </div>
+
+        <div class="advanced-features">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">Progress Tracking</div>
+                <div class="feature-description">Visual progress bars and completion percentages</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div id="progressText">0% Complete</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <div class="feature-title">Achievements</div>
+                <div class="feature-description">Unlock badges for coding milestones</div>
+                <div id="achievementBadges">
+                    <span class="keyword-tag">🥇 First Problem</span>
+                    <span class="keyword-tag">🔥 5 Day Streak</span>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <div class="feature-title">Activity Heatmap</div>
+                <div class="feature-description">GitHub-style activity visualization</div>
+                <div class="heatmap" id="heatmap"></div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <button class="nav-btn" onclick="previousMonth()">←</button>
+                    <div class="current-month" id="currentMonth"></div>
+                    <button class="nav-btn" onclick="nextMonth()">→</button>
+                </div>
+                <table class="calendar" id="calendar"></table>
+            </div>
+
+            <div class="problem-detail">
+                <h2>Problem Details</h2>
+                <div class="no-problem" id="noProblem">
+                    Select a date to view problem details
+                </div>
+                <div class="problem-info" id="problemInfo">
+                    <div class="problem-name" id="problemName"></div>
+                    <div class="problem-statement" id="problemStatement"></div>
+                    <div class="keywords" id="problemKeywords"></div>
+                    <a href="#" class="code-link" id="codeLink" target="_blank">View Code</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced sample data with difficulty levels
+        let problemsData = {};
+        fetch('daily-challenge/daily-challenge-data.json')
+          .then(response => response.json())
+          .then(data => {
+            // Convert array to an object for fast lookup by date
+            problemsData = {};
+            data.forEach(problem => {
+              problemsData[problem.date] = problem;
+            });
+            initializeCalendar();
+          })
+          .catch(error => console.error('Error loading problems:', error));
+
+        let currentDate = new Date();
+        let selectedDate = null;
+        let currentFilter = 'all';
+
+        function initializeCalendar() {
+            updateCalendar();
+            updateStats();
+            generateHeatmap();
+            updateProgressBar();
+            updateAchievements();
+        }
+
+        function updateCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            document.getElementById('currentMonth').textContent = 
+                new Date(year, month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            let calendarHTML = '<tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>';
+            
+            let date = 1;
+            for (let i = 0; i < 6; i++) {
+                calendarHTML += '<tr>';
+                for (let j = 0; j < 7; j++) {
+                    if (i === 0 && j < firstDay) {
+                        calendarHTML += '<td class="other-month"></td>';
+                    } else if (date > daysInMonth) {
+                        calendarHTML += '<td class="other-month"></td>';
+                    } else {
+                        const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+                        const hasProblem = problemsData[dateString] ? 'has-problem' : '';
+                        const isSelected = selectedDate === dateString ? 'selected' : '';
+                        
+                        calendarHTML += `<td class="${hasProblem} ${isSelected}" onclick="selectDate('${dateString}')">
+                            ${date}
+                            ${problemsData[dateString] ? '<div class="problem-indicator"></div>' : ''}
+                        </td>`;
+                        date++;
+                    }
+                }
+                calendarHTML += '</tr>';
+            }
+            
+            document.getElementById('calendar').innerHTML = calendarHTML;
+        }
+
+        function selectDate(dateString) {
+            selectedDate = dateString;
+            updateCalendar();
+            
+            const problem = problemsData[dateString];
+            if (problem) {
+                document.getElementById('noProblem').style.display = 'none';
+                document.getElementById('problemInfo').classList.add('active');
+                
+                document.getElementById('problemName').textContent = problem.problemName;
+                document.getElementById('problemStatement').textContent = problem.problemStatement;
+                document.getElementById('codeLink').href = problem.codeLink;
+                
+                // Create keywords with difficulty tag
+                let keywordsHTML = `<span class="difficulty-tag difficulty-${problem.difficulty}">${problem.difficulty.toUpperCase()}</span>`;
+                keywordsHTML += problem.keywords.map(keyword => 
+                    `<span class="keyword-tag">${keyword}</span>`
+                ).join('');
+                document.getElementById('problemKeywords').innerHTML = keywordsHTML;
+            } else {
+                document.getElementById('noProblem').style.display = 'block';
+                document.getElementById('problemInfo').classList.remove('active');
+                            }
+        }
+
+        function previousMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            updateCalendar();
+        }
+
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            updateCalendar();
+        }
+
+        function searchByDate() {
+            const date = document.getElementById('dateSearch').value;
+            if (date && problemsData[date]) {
+                selectDate(date);
+            } else {
+                alert('No problem found for this date.');
+            }
+        }
+
+        function searchByKeyword() {
+            const keyword = document.getElementById('keywordSearch').value.toLowerCase();
+            const results = Object.values(problemsData).filter(problem =>
+                problem.keywords.some(k => k.includes(keyword)) || 
+                problem.problemName.toLowerCase().includes(keyword)
+            );
+            renderSearchResults(results);
+        }
+
+        function renderSearchResults(results) {
+            const container = document.getElementById('searchResults');
+            container.innerHTML = '';
+            if (results.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            results.forEach(problem => {
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+                item.onclick = () => selectDate(problem.date);
+                item.innerHTML = `
+                    <div class="result-date">${problem.date} (${problem.day})</div>
+                    <div class="result-title">${problem.problemName}</div>
+                    <div class="result-keywords">
+                        ${problem.keywords.map(k => `<span class="result-keyword">${k}</span>`).join('')}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+            container.style.display = 'block';
+        }
+
+        function filterByDifficulty(level) {
+            currentFilter = level;
+            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.difficulty-btn[onclick="filterByDifficulty('${level}')"]`).classList.add('active');
+            updateCalendar();
+        }
+
+        function updateStats() {
+            const problems = Object.values(problemsData);
+            const total = problems.length;
+            const thisMonth = problems.filter(p => p.date.startsWith(`${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`)).length;
+            const easy = problems.filter(p => p.difficulty === 'easy').length;
+            const medium = problems.filter(p => p.difficulty === 'medium').length;
+            const hard = problems.filter(p => p.difficulty === 'hard').length;
+
+            document.getElementById('totalProblems').textContent = total;
+            document.getElementById('thisMonth').textContent = thisMonth;
+            document.getElementById('difficultyStats').textContent = `${easy}/${medium}/${hard}`;
+
+            // Simple streak calculation: consecutive days
+            const dates = problems.map(p => p.date).sort();
+            let streak = 0;
+            let today = new Date(dates[dates.length - 1]);
+            for (let i = dates.length - 1; i >= 0; i--) {
+                const d = new Date(dates[i]);
+                if (today.toDateString() === d.toDateString()) {
+                    streak++;
+                    today.setDate(today.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+            document.getElementById('currentStreak').textContent = streak;
+        }
+
+        function generateHeatmap() {
+            const heatmap = document.getElementById('heatmap');
+            heatmap.innerHTML = '';
+            const days = 30;
+            let today = new Date();
+            for (let i = 0; i < days; i++) {
+                const d = new Date(today);
+                d.setDate(today.getDate() - i);
+                const dateStr = d.toISOString().split('T')[0];
+                const cell = document.createElement('div');
+                cell.className = 'heatmap-cell';
+                if (problemsData[dateStr]) {
+                    cell.classList.add('active');
+                }
+                heatmap.appendChild(cell);
+            }
+        }
+
+        function updateProgressBar() {
+            const solved = Object.keys(problemsData).length;
+            const target = 100; // example target
+            const percent = Math.min((solved / target) * 100, 100);
+            document.getElementById('progressFill').style.width = `${percent}%`;
+            document.getElementById('progressText').textContent = `${Math.round(percent)}% Complete`;
+        }
+
+        function updateAchievements() {
+            // Example: add logic here for custom badges if needed
+        }
+
+        function toggleTheme() {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        }
+
+        initializeCalendar();
+    </script>
+</body>
+</html>
