@@ -11,7 +11,7 @@
   {
     "date": "2025-07-08",
     "day": "Tuesday",
-    "problemName": "Two Sum",
+    "problemName": "Three Sum",
     "problemStatement": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
     "codeLink": "https://github.com/username/dsa-solutions/blob/main/two-sum.py",
     "keywords": ["hash-map", "arrays"],
