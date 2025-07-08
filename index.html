@@ -702,16 +702,16 @@
             <div class="feature-card">
                 <div class="feature-icon">📅</div>
                     <div class="feature-title">Consistency Metrics</div>
-                    <div class="feature-description">
-                      Track how consistent you are with your daily problem-solving habit.
-                    </div>
-                <div style="margin-top: 15px; text-align: left;">
+                        <div class="feature-description">
+                          Track how consistent you are with your daily problem-solving habit.
+                        </div>
+                    <div style="margin-top: 15px; text-align: left;">
                     <div><strong>🔥 Longest Streak:</strong> <span id="longestStreak">0</span> days</div>
                         <div><strong>📅 This Month:</strong> <span id="monthConsistency">0/30</span> days</div>
                     <div class="progress-bar">
                         <div class="progress-fill" id="consistencyFill" style="width: 0%"></div>
                     </div>
-            <div id="consistencyText">0% Consistent</div>
+                    <div id="consistencyText">0% Consistent</div>
                 </div>
             </div>
             <div class="feature-card">
@@ -748,6 +748,11 @@
             updateStats();
             generateHeatmap();
             updateConsistency();
+        }
+
+        function getWeekday(dateStr) {
+          const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+          return days[new Date(dateStr).getDay()];
         }
 
         function updateCalendar() {
@@ -871,66 +876,118 @@
             updateCalendar();
         }
 
-        function updateConsistency() {
-          let dates = Object.keys(problemsData);
-          let uniqueDates = new Set(dates);
+        // function updateConsistency() {
+        //   let dates = Object.keys(problemsData);
+        //   //let uniqueDates = new Set(dates);
+        //   let uniqueDates = new Set(problemsData.map(p => p.date));
         
-          let streak = 0, longest = 0, currentStreak = 0;
-          let today = new Date();
-          let datePointer = new Date(today);
+        //   let streak = 0, longest = 0, currentStreak = 0;
+        //   let today = new Date();
+        //   let datePointer = new Date(today);
         
-          while (true) {
-            let y = datePointer.getFullYear();
-            let m = String(datePointer.getMonth() + 1).padStart(2, '0');
-            let d = String(datePointer.getDate()).padStart(2, '0');
-            let dateStr = `${y}-${m}-${d}`;
-            if (uniqueDates.has(dateStr)) {
-              currentStreak++;
-              datePointer.setDate(datePointer.getDate() - 1);
-            } else {
-              break;
-            }
-          }
+        //   while (true) {
+        //     let y = datePointer.getFullYear();
+        //     let m = String(datePointer.getMonth() + 1).padStart(2, '0');
+        //     let d = String(datePointer.getDate()).padStart(2, '0');
+        //     let dateStr = `${y}-${m}-${d}`;
+        //     if (uniqueDates.has(dateStr)) {
+        //       currentStreak++;
+        //       datePointer.setDate(datePointer.getDate() - 1);
+        //     } else {
+        //       break;
+        //     }
+        //   }
         
-          // Calculate longest streak
-          let sorted = Array.from(uniqueDates).sort();
-          let prev = null;
-          let tempStreak = 0;
+        //   // Calculate longest streak
+        //   let sorted = Array.from(uniqueDates).sort();
+        //   let prev = null;
+        //   let tempStreak = 0;
         
-          sorted.forEach(date => {
-            let thisDate = new Date(date);
-            if (prev) {
-              let diff = (thisDate - prev) / (1000 * 60 * 60 * 24);
+        //   sorted.forEach(date => {
+        //     let thisDate = new Date(date);
+        //     if (prev) {
+        //       let diff = (thisDate - prev) / (1000 * 60 * 60 * 24);
+        //       if (diff === 1) {
+        //         tempStreak++;
+        //       } else {
+        //         tempStreak = 1;
+        //       }
+        //     } else {
+        //       tempStreak = 1;
+        //     }
+        //     if (tempStreak > longest) longest = tempStreak;
+        //     prev = thisDate;
+        //   });
+        
+        //   // Calculate this month’s consistency
+        //   let year = today.getFullYear();
+        //   let month = today.getMonth();
+        //   let daysInMonth = new Date(year, month + 1, 0).getDate();
+        //   let solvedThisMonth = sorted.filter(d => {
+        //     let dt = new Date(d);
+        //     return dt.getFullYear() === year && dt.getMonth() === month;
+        //   }).length;
+        
+        //   let percent = (solvedThisMonth / daysInMonth) * 100;
+        
+        //   // Update HTML
+        //   document.getElementById('longestStreak').textContent = longest;
+        //   document.getElementById('monthConsistency').textContent = `${solvedThisMonth}/${daysInMonth}`;
+        //   document.getElementById('consistencyFill').style.width = `${percent}%`;
+        //   document.getElementById('consistencyText').textContent = `${percent.toFixed(0)}% Consistent`;
+        // }
+        function updateConsistency(problemsData) {
+          // Get unique date strings
+          let uniqueDates = new Set(Object.values(problemsData).map(p => p.date));
+        
+          let totalDays = uniqueDates.size;
+        
+          // Sort the unique dates
+          let sortedDates = Array.from(uniqueDates).sort();
+        
+          // Calculate streaks
+          let longestStreak = 0;
+          let currentStreak = 0;
+          let prevDate = null;
+        
+          sortedDates.forEach(dateStr => {
+            let date = new Date(dateStr);
+            if (prevDate) {
+              let diff = (date - prevDate) / (1000 * 60 * 60 * 24);
               if (diff === 1) {
-                tempStreak++;
+                currentStreak++;
               } else {
-                tempStreak = 1;
+                currentStreak = 1;
               }
             } else {
-              tempStreak = 1;
+              currentStreak = 1;
             }
-            if (tempStreak > longest) longest = tempStreak;
-            prev = thisDate;
+        
+            if (currentStreak > longestStreak) {
+              longestStreak = currentStreak;
+            }
+        
+            prevDate = date;
           });
         
           // Calculate this month’s consistency
-          let year = today.getFullYear();
-          let month = today.getMonth();
-          let daysInMonth = new Date(year, month + 1, 0).getDate();
-          let solvedThisMonth = sorted.filter(d => {
-            let dt = new Date(d);
-            return dt.getFullYear() === year && dt.getMonth() === month;
+          const now = new Date();
+          const month = now.getMonth();
+          const year = now.getFullYear();
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
+          const solvedThisMonth = Array.from(uniqueDates).filter(dateStr => {
+            const d = new Date(dateStr);
+            return d.getMonth() === month && d.getFullYear() === year;
           }).length;
         
-          let percent = (solvedThisMonth / daysInMonth) * 100;
+          const percent = Math.round((solvedThisMonth / daysInMonth) * 100);
         
-          // Update HTML
-          document.getElementById('longestStreak').textContent = longest;
+          document.getElementById('longestStreak').textContent = longestStreak;
+          document.getElementById('currentStreak').textContent = currentStreak;
           document.getElementById('monthConsistency').textContent = `${solvedThisMonth}/${daysInMonth}`;
           document.getElementById('consistencyFill').style.width = `${percent}%`;
-          document.getElementById('consistencyText').textContent = `${percent.toFixed(0)}% Consistent`;
+          document.getElementById('consistencyText').textContent = `${percent}% Consistent`;
         }
-
 
         function updateStats() {
             const problems = Object.values(problemsData);
