@@ -703,7 +703,7 @@
             </div>
         </div>
 
-        <div class="advanced-features">
+        <!-- <div class="advanced-features">
             <div class="feature-card">
                 <div class="feature-icon">📅</div>
                     <div class="feature-title">Consistency Metrics</div>
@@ -725,6 +725,32 @@
                 <div class="feature-description">GitHub-style activity visualization</div>
                 <div class="heatmap" id="heatmap"></div>
             </div>
+        </div> -->
+        <div class="advanced-features">
+          <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <div class="feature-title">Consistency Metrics</div>
+            <div class="feature-description">
+              Track how consistent you are with your daily problem-solving habit.
+            </div>
+            <div style="margin-top: 15px; text-align: left;">
+              <div><strong>🔥 Longest Streak:</strong> <span id="longestStreak">0</span> days</div>
+              <div><strong>📅 This Month:</strong> <span id="monthConsistency">0/30</span> days</div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="consistencyFill" style="width: 0%"></div>
+              </div>
+              <div id="consistencyText">0% Consistent</div>
+            </div>
+          </div>
+        
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <div class="feature-title">Daily Solves Bar Chart</div>
+            <div class="feature-description">
+              Visualize how many problems you solved each day this month.
+            </div>
+            <canvas id="dailyChart" width="400" height="200"></canvas>
+          </div>
         </div>
 
     </div>
@@ -752,6 +778,7 @@
             updateCalendar();
             updateStats();
             updateConsistency(problemsData);
+            drawDailyChart();
         }
 
         function getWeekday(dateStr) {
@@ -979,8 +1006,51 @@
             const isDark = document.body.getAttribute('data-theme') === 'dark';
             document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
         }
+        function drawDailyChart() {
+          const ctx = document.getElementById('dailyChart').getContext('2d');
+          const today = new Date();
+          const year = today.getFullYear();
+          const month = today.getMonth();
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+          const dayLabels = [];
+          const dayCounts = new Array(daysInMonth).fill(0);
+        
+          Object.values(problemsData).forEach(p => {
+            const d = new Date(p.date);
+            if (d.getMonth() === month && d.getFullYear() === year) {
+              const day = d.getDate() - 1; // zero index
+              dayCounts[day]++;
+            }
+          });
+        
+          for (let i = 1; i <= daysInMonth; i++) {
+            dayLabels.push(i.toString());
+          }
+        
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: dayLabels,
+              datasets: [{
+                label: 'Problems Solved',
+                data: dayCounts,
+                backgroundColor: '#667eea'
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  stepSize: 1
+                }
+              }
+            }
+          });
+        }
 
         initializeCalendar();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
