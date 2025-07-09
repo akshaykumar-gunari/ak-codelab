@@ -2,19 +2,23 @@
   {
     "date": "2025-07-08",
     "day": "Tuesday",
-    "problemName": "Two Sum",
-    "problemStatement": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-    "codeLink": "https://github.com/username/dsa-solutions/blob/main/two-sum.py",
-    "keywords": ["hash-map", "arrays"],
+    "problemName": "Test",
+    "problemStatement": "Test",
+    "codeLink": "Test",
+    "keywords": [
+      "Test"
+    ],
     "difficulty": "easy"
   },
   {
-    "date": "2025-07-08",
-    "day": "Tuesday",
-    "problemName": "Three Sum",
-    "problemStatement": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-    "codeLink": "https://github.com/username/dsa-solutions/blob/main/two-sum.py",
-    "keywords": ["hash-map", "arrays"],
-    "difficulty": "easy"
+    "date": "2025-07-07",
+    "day": "Monday",
+    "problemName": "Test 2",
+    "problemStatement": "test2",
+    "codeLink": "https://github.com/akshaykumar-gunari/ak-daily-journal/blob/main/index.html",
+    "keywords": [
+      "recursion"
+    ],
+    "difficulty": "medium"
   }
 ]
