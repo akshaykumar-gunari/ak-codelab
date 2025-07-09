@@ -24,7 +24,7 @@ jobs:
 
       - name: Run sync script
         run: |
-          python sync_codelab_json.py
+          python script/sync_codelab_json.py
 
       - name: Commit and push changes
         run: |
