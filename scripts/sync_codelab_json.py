@@ -4,15 +4,15 @@ import json
 from datetime import datetime
 import os
 
-# ✅ Authenticate using your service account
+# ✅ Authenticate using your service account JSON
 gc = gspread.service_account(filename="service_account.json")
 
-# ✅ Open the Google Sheet by URL
+# ✅ Open your Google Sheet by URL
 spreadsheet_url = "https://docs.google.com/spreadsheets/d/179xSRFDvYraYWAMpbPxLWViuwOHEyrM43DnrWPNpQeU/edit"
 sh = gc.open_by_url(spreadsheet_url)
 worksheet = sh.worksheet("Form Responses 1")
 
-# ✅ Get all rows as a list of dicts
+# ✅ Get all rows as dictionaries
 records = worksheet.get_all_records()
 
 # ✅ Load existing JSON if it exists
@@ -23,26 +23,26 @@ if os.path.exists(json_file):
 else:
     current_data = []
 
-# ✅ Track existing dates to prevent duplicates
+# ✅ Gather existing ISO dates to avoid duplicates
 existing_dates = {entry["date"] for entry in current_data}
 
-# ✅ Add only NEW rows
-new_rows = 0
-for row in records:
-    date_str = row["Date"]
+new_entries = []
 
-    if not date_str.strip():
+for row in records:
+    date_str = row["Date"].strip()
+
+    if not date_str:
         print(f"⚠️ Skipping row with empty date: {row}")
         continue
 
+    # If date includes time (like: '10/07/2025 11:23:01'), split to get just the date part
+    date_part = date_str.split()[0]
+
     try:
-        # Handle possible time part
-        if " " in date_str:
-            date_obj = datetime.strptime(date_str.strip(), "%m/%d/%Y %H:%M:%S")
-        else:
-            date_obj = datetime.strptime(date_str.strip(), "%m/%d/%Y")
-    except ValueError as e:
-        print(f"⚠️ Invalid date format in row: {row} -> {e}")
+        # Use correct format: DD/MM/YYYY (your format)
+        date_obj = datetime.strptime(date_part, "%d/%m/%Y")
+    except ValueError:
+        print(f"⚠️ Invalid date format, skipping row: {row}")
         continue
 
     date_iso = date_obj.strftime("%Y-%m-%d")
@@ -62,10 +62,12 @@ for row in records:
     }
 
     current_data.append(new_entry)
-    new_rows += 1
+    new_entries.append(new_entry)
 
-# ✅ Write updated JSON if there’s new data
-with open(json_file, "w") as f:
-    json.dump(current_data, f, indent=2)
-
-print(f"✅ Synced {len(current_data)} total entries to {json_file} (+{new_rows} new rows)")
+# ✅ Write updated JSON if new rows were added
+if new_entries:
+    with open(json_file, "w") as f:
+        json.dump(current_data, f, indent=2)
+    print(f"✅ Synced {len(new_entries)} new rows to {json_file} (Total: {len(current_data)})")
+else:
+    print(f"✅ No new rows found. JSON is up to date! (Total: {len(current_data)})")
