@@ -27,11 +27,10 @@ jobs:
 
     - name: Write service_account.json
       run: |
-        printf "%s" "${{ secrets.GDRIVE_CREDENTIALS }}" > service_account.json
+        echo '${{ secrets.GDRIVE_CREDENTIALS }}' > service_account.json
 
     - name: Verify JSON
-      run: |
-        python -m json.tool service_account.json
+      run: python -m json.tool service_account.json
 
     - name: Run sync script
       run: python scripts/sync_codelab_json.py
