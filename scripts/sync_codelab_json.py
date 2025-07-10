@@ -1,5 +1,4 @@
 import gspread
-import pandas as pd
 import json
 from datetime import datetime
 import os
@@ -23,8 +22,8 @@ if os.path.exists(json_file):
 else:
     current_data = []
 
-# ✅ Gather existing ISO dates to avoid duplicates
-existing_dates = {entry["date"] for entry in current_data}
+# ✅ Gather (date, problemName) to check duplicates properly
+existing_keys = {(entry["date"], entry["problemName"]) for entry in current_data}
 
 new_entries = []
 
@@ -48,7 +47,8 @@ for row in records:
     date_iso = date_obj.strftime("%Y-%m-%d")
     day_name = date_obj.strftime("%A")
 
-    if date_iso in existing_dates:
+    row_key = (date_iso, row["Problem Name"])
+    if row_key in existing_keys:
         continue
 
     new_entry = {
