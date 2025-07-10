@@ -15,7 +15,7 @@ worksheet = sh.worksheet("Form Responses 1")
 records = worksheet.get_all_records()
 
 # ✅ Load existing JSON if it exists
-json_file = "journal-data.json"
+json_file = "daily-challenge/daily-challenge-data.json"
 if os.path.exists(json_file):
     with open(json_file, "r") as f:
         current_data = json.load(f)
