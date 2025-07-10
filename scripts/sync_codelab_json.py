@@ -16,7 +16,7 @@ records = worksheet.get_all_records()
 print(f"✅ Fetched {len(records)} rows from the sheet")
 
 # 4️⃣ Load existing JSON, fallback if empty
-json_file = "journal-data.json"
+json_file = "daily-challenge/daily-challenge-data.json"
 current_data = []
 if os.path.exists(json_file):
     with open(json_file, "r") as f:
