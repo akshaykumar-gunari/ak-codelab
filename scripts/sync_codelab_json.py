@@ -66,6 +66,7 @@ for row in records:
         "day": day_name,
         "problemName": row["Problem Name"],
         "problemStatement": row["Problem Statement"],
+        "problemStatementLink": row["Problem Statement Link"],
         "codeLink": row["Code Link"],
         "keywords": [kw.strip() for kw in row["Keywords (Comma Separated)"].split(",")],
         "difficulty": row["Difficulty Level"].lower()
