@@ -745,7 +745,7 @@
     <script>
         initializeCalendar();
         // Enhanced sample data with difficulty levels
-        let problemsData = {};
+        //let problemsData = {};
         fetch('daily-challenge/daily-challenge-data.json')
           .then(response => response.json())
           .then(data => {
@@ -764,6 +764,8 @@
           })
           .catch(error => console.error('Error loading problems:', error));
 
+        // 1️⃣ Vars first
+        let problemsData = {};
         let currentDate = new Date();
         let selectedDate = null;
         let currentFilter = 'all';
