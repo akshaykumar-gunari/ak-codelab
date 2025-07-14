@@ -743,9 +743,16 @@
     </div>
 
     <script>
-        initializeCalendar();
         // Enhanced sample data with difficulty levels
         //let problemsData = {};
+
+        // 1️⃣ Vars first
+        let problemsData = {};
+        let currentDate = new Date();
+        let selectedDate = null;
+        let currentFilter = 'all';
+
+
         fetch('daily-challenge/daily-challenge-data.json')
           .then(response => response.json())
           .then(data => {
@@ -757,24 +764,12 @@
             }
             problemsData[problem.date].push(problem);
             });
-            // initializeCalendar();
+            initializeCalendar();
             updateCalendar();
             updateStats();
             updateConsistency();
           })
           .catch(error => console.error('Error loading problems:', error));
-
-        // 1️⃣ Vars first
-        let problemsData = {};
-        let currentDate = new Date();
-        let selectedDate = null;
-        let currentFilter = 'all';
-
-        function initializeCalendar() {
-            updateCalendar();
-            //updateStats();
-            //updateConsistency(problemsData);
-        }
 
         function getWeekday(dateStr) {
           const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
