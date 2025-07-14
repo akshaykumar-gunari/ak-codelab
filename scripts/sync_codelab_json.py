@@ -7,7 +7,7 @@ import os
 gc = gspread.service_account(filename="service_account.json")
 
 # 2️⃣ Open Google Sheet
-spreadsheet_url = "https://docs.google.com/spreadsheets/d/179xSRFDvYraYWAMpbPxLWViuwOHEyrM43DnrWPNpQeU/edit"
+spreadsheet_url = "https://docs.google.com/spreadsheets/d/1Iksef33n4A8M6AE87CFzsIso22SFCs_OwL3IzLku3Us/edit"
 sh = gc.open_by_url(spreadsheet_url)
 worksheet = sh.worksheet("Form Responses 1")
 
