@@ -743,6 +743,7 @@
     </div>
 
     <script>
+        initializeCalendar();
         // Enhanced sample data with difficulty levels
         let problemsData = {};
         fetch('daily-challenge/daily-challenge-data.json')
@@ -756,7 +757,10 @@
             }
             problemsData[problem.date].push(problem);
             });
-            initializeCalendar();
+            // initializeCalendar();
+            updateCalendar();
+            updateStats();
+            updateConsistency();
           })
           .catch(error => console.error('Error loading problems:', error));
 
@@ -766,8 +770,8 @@
 
         function initializeCalendar() {
             updateCalendar();
-            updateStats();
-            updateConsistency(problemsData);
+            //updateStats();
+            //updateConsistency(problemsData);
         }
 
         function getWeekday(dateStr) {
