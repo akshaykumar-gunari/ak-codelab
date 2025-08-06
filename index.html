@@ -872,10 +872,18 @@
 
         function searchByKeyword() {
             const keyword = document.getElementById('keywordSearch').value.toLowerCase();
-            const results = Object.values(problemsData).filter(problem =>
-                problem.keywords.some(k => k.includes(keyword)) || 
-                problem.problemName.toLowerCase().includes(keyword)
-            );
+            const results = [];
+            
+            // Iterate through all dates and their problems
+            Object.entries(problemsData).forEach(([date, problems]) => {
+                problems.forEach(problem => {
+                    if (problem.keywords.some(k => k.toLowerCase().includes(keyword)) || 
+                        problem.problemName.toLowerCase().includes(keyword)) {
+                        results.push(problem);
+                    }
+                });
+            });
+            
             renderSearchResults(results);
         }
 
