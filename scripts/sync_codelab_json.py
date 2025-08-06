@@ -43,15 +43,29 @@ for row in records:
         print(f"⚠️ Skipping row with empty date: {row}")
         continue
 
+    # Split to handle potential timestamps
     date_part = date_str.split()[0]
-    try:
-        date_obj = datetime.strptime(date_part, "%d/%m/%Y")
-    except ValueError:
+
+    # Try multiple date formats
+    date_obj = None
+    date_formats = [
+        "%Y/%m/%d",     # 2025/08/06 (YYYY/MM/DD) - your current format
+        "%Y-%m-%d",     # 2025-08-06 (YYYY-MM-DD)
+        "%m/%d/%Y",     # 8/6/2025 (MM/DD/YYYY)
+        "%d/%m/%Y",     # 6/8/2025 (DD/MM/YYYY)
+    ]
+
+    for fmt in date_formats:
         try:
-            date_obj = datetime.strptime(date_part, "%m/%d/%Y")
+            date_obj = datetime.strptime(date_part, fmt)
+            print(f"✅ Parsed date {date_part} using format {fmt}")
+            break
         except ValueError:
-            print(f"❌ Invalid date: {date_part}")
             continue
+
+    if date_obj is None:
+        print(f"❌ Could not parse date: {date_part}")
+        continue
 
     date_iso = date_obj.strftime("%Y-%m-%d")
     day_name = date_obj.strftime("%A")
